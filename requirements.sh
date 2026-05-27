@@ -1,3 +1,10 @@
 pip install trl
 pip install bitsandbytes
 pip install transformers==4.57.6
+pip install datasets
+pip install deepspeed
+pip install torch
+pip install networkx
+pip install numpy
+pip install matplotlib
+pip install tqdm
