@@ -84,6 +84,47 @@ GraphVulcan/
 └── utils/                        # Utility functions
 ```
 
+## Download
+
+### Dataset
+
+The training and evaluation data is hosted on Hugging Face:
+
+```bash
+# Install Git LFS (required for large files)
+git lfs install
+
+# Clone the dataset repository
+git clone https://huggingface.co/datasets/alibaba-behavioral-risk-control/GraphVulcan-Data
+
+# Or load directly in Python
+from datasets import load_dataset
+dataset = load_dataset("alibaba-behavioral-risk-control/GraphVulcan-Data")
+```
+
+### Model Checkpoints
+
+We release two model checkpoints:
+
+| Model | Description | Link |
+|-------|-------------|------|
+| **GraphVulcan-SFT** | After Stage 2 multi-task supervised fine-tuning | [🤗 HuggingFace](https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-SFT) |
+| **GraphVulcan-GRPO** | After Stage 3 GRPO reinforcement learning | [🤗 HuggingFace](https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-GRPO) |
+
+```bash
+# Download via Git
+git lfs install
+git clone https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-SFT
+git clone https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-GRPO
+
+# Or load directly in Python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = "alibaba-behavioral-risk-control/GraphVulcan-SFT"  # or GraphVulcan-GRPO
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype="bfloat16", device_map="auto")
+```
+
 ## Getting Started
 
 ### Installation
