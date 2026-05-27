@@ -66,7 +66,7 @@ echo "=========================================="
 
 echo "Running Connectivity - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_connectivity/${ENCODING}_Stage2_Connectivity_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/connectivity/${ENCODING}_Stage2_Connectivity_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_connectivity" \
     --num_splits $SPLITS \
@@ -77,7 +77,7 @@ python inference.py \
 echo ""
 echo "Running Connectivity - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_connectivity/${ENCODING}_Stage2_Connectivity_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/connectivity/${ENCODING}_Stage2_Connectivity_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_connectivity" \
     --num_splits $SPLITS \
@@ -94,7 +94,7 @@ echo "=========================================="
 
 echo "Running Degree - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_degree/${ENCODING}_Stage2_Degree_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/degree/${ENCODING}_Stage2_Degree_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_degree" \
     --num_splits $SPLITS \
@@ -105,7 +105,7 @@ python inference.py \
 echo ""
 echo "Running Degree - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_degree/${ENCODING}_Stage2_Degree_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/degree/${ENCODING}_Stage2_Degree_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_degree" \
     --num_splits $SPLITS \
@@ -122,7 +122,7 @@ echo "=========================================="
 
 echo "Running Shortest Path - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_shortest_path/${ENCODING}_Stage2_ShortestPath_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/shortest_path/${ENCODING}_Stage2_ShortestPath_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_shortest_path" \
     --num_splits $SPLITS \
@@ -133,7 +133,7 @@ python inference.py \
 echo ""
 echo "Running Shortest Path - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_shortest_path/${ENCODING}_Stage2_ShortestPath_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/shortest_path/${ENCODING}_Stage2_ShortestPath_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_shortest_path" \
     --num_splits $SPLITS \
@@ -150,7 +150,7 @@ echo "=========================================="
 
 echo "Running Isomorphism - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_isomorphism/${ENCODING}_Stage2_Isomorphism_CoT_Nodes-6-10_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/isomorphism/${ENCODING}_Stage2_Isomorphism_CoT_Nodes-6-10_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_isomorphism" \
     --num_splits $SPLITS \
@@ -161,7 +161,7 @@ python inference.py \
 echo ""
 echo "Running Isomorphism - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_isomorphism/${ENCODING}_Stage2_Isomorphism_CoT_Nodes-11-15_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/isomorphism/${ENCODING}_Stage2_Isomorphism_CoT_Nodes-11-15_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_isomorphism" \
     --num_splits $SPLITS \
@@ -178,7 +178,7 @@ echo "=========================================="
 
 echo "Running Cycle Detection - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_cycle_detection/${ENCODING}_Stage2_CycleDetection_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/cycle_detection/${ENCODING}_Stage2_CycleDetection_CoT_Nodes-11-30_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_cycle_detection" \
     --num_splits $SPLITS \
@@ -189,7 +189,7 @@ python inference.py \
 echo ""
 echo "Running Cycle Detection - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_cycle_detection/${ENCODING}_Stage2_CycleDetection_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/cycle_detection/${ENCODING}_Stage2_CycleDetection_CoT_Nodes-31-50_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_cycle_detection" \
     --num_splits $SPLITS \
@@ -206,7 +206,7 @@ echo "=========================================="
 
 echo "Running Max Clique - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_max_clique/${ENCODING}_Stage2_MaxClique_CoT_Nodes-5-7_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/max_clique/${ENCODING}_Stage2_MaxClique_CoT_Nodes-5-7_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_max_clique" \
     --num_splits $SPLITS \
@@ -217,7 +217,7 @@ python inference.py \
 echo ""
 echo "Running Max Clique - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_max_clique/${ENCODING}_Stage2_MaxClique_CoT_Nodes-8-10_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/max_clique/${ENCODING}_Stage2_MaxClique_CoT_Nodes-8-10_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_max_clique" \
     --num_splits $SPLITS \
@@ -234,7 +234,7 @@ echo "=========================================="
 
 echo "Running Max Common Subgraph - Dataset 1 (Easy)..."
 python inference.py \
-    --test_data_path "s2_max_common_subgraph/${ENCODING}_Stage2_MCS_CoT_Nodes-5-7_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/max_common_subgraph/${ENCODING}_Stage2_MCS_CoT_Nodes-5-7_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_max_common_subgraph" \
     --num_splits $SPLITS \
@@ -245,7 +245,7 @@ python inference.py \
 echo ""
 echo "Running Max Common Subgraph - Dataset 2 (Hard)..."
 python inference.py \
-    --test_data_path "s2_max_common_subgraph/${ENCODING}_Stage2_MCS_CoT_Nodes-8-10_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
+    --test_data_path "GraphVulcan-Data/stage2-3/max_common_subgraph/${ENCODING}_Stage2_MCS_CoT_Nodes-8-10_Samples-${SAMPLES}_Splits-${SPLITS}_Test.jsonl" \
     --model_path "$MODEL_PATH" \
     --task "s2_max_common_subgraph" \
     --num_splits $SPLITS \

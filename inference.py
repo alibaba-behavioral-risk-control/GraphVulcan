@@ -22,12 +22,12 @@ graph_vocab = GraphVocabulary()
 timestamp_str = datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
 
 parser = argparse.ArgumentParser(description="LLM Inference for Graph Reasoning Tasks")
-parser.add_argument("--test_data_path", type=str, default="data/s2_shortest_path/GraphVocab_Stage2_ShortestPath_CoT_Nodes-11-30_Samples-100_Splits-1_Test.jsonl", help="Path to test data JSON file")
-parser.add_argument("--model_path", type=str, default="model/GraphVulcan-SFT", help="Path to the pretrained model")
+parser.add_argument("--test_data_path", type=str, default="GraphVulcan-Data/stage2-3/shortest_path/GraphVocab_Stage2_ShortestPath_CoT_Nodes-11-30_Samples-100_Splits-3_Test.jsonl", help="Path to test data JSON file")
+parser.add_argument("--model_path", type=str, default="alibaba-behavioral-risk-control/GraphVulcan-SFT", help="Path to the pretrained model")
 parser.add_argument("--max_new_tokens", type=int, default=8192, help="Maximum number of tokens to generate")
 parser.add_argument("--temperature", type=float, default=0.5, help="Sampling temperature")
 parser.add_argument("--task", type=str, default="s2_shortest_path", help="Select task")
-parser.add_argument("--num_splits", type=int, default=10, help="Number of splits for evaluation")
+parser.add_argument("--num_splits", type=int, default=3, help="Number of splits for evaluation")
 parser.add_argument("--verbose", action="store_true", help="Print user messages and assistant responses during inference")
 parser.add_argument("--batch_size", type=int, default=1, help="Batch size for inference (increase for faster multi-GPU inference)")
 args = parser.parse_args()
@@ -182,9 +182,9 @@ def inference(test_data, tokenizer, model, output_path, verbose=True, batch_size
 if __name__ == "__main__":
     print(args)
     print("Loading test data...")
-    test_data_path = f"data/{args.test_data_path}"
-    model_path = f"model/{args.model_path}"
-    test_data = load_dataset("json", data_files=test_data_path)
+    test_data_path = args.test_data_path
+    model_path = args.model_path
+    test_data = load_dataset("json", data_files=test_data_path, split="train")
 
     print("Loading tokenizer and model...")
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)

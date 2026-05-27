@@ -3,7 +3,7 @@
 
 set -e
 
-MODEL_PATH="Qwen/GraphVulcan-SFT"
+MODEL_PATH="alibaba-behavioral-risk-control/GraphVulcan-SFT"
 ENCODING="GraphVocab"
 SPLITS=3
 SAMPLES=100
