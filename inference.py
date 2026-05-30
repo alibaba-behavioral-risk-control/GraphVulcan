@@ -29,7 +29,8 @@ parser.add_argument("--temperature", type=float, default=0.5, help="Sampling tem
 parser.add_argument("--task", type=str, default="s2_shortest_path", help="Select task")
 parser.add_argument("--num_splits", type=int, default=3, help="Number of splits for evaluation")
 parser.add_argument("--verbose", action="store_true", help="Print user messages and assistant responses during inference")
-parser.add_argument("--batch_size", type=int, default=1, help="Batch size for inference (increase for faster multi-GPU inference)")
+parser.add_argument("--batch_size", type=int, default=10, help="Batch size for inference (increase for faster multi-GPU inference)")
+parser.add_argument("--device", type=str, default="cuda:0", help="Device for model inference (e.g., cuda:0 or cpu)")
 args = parser.parse_args()
 
 
@@ -41,7 +42,7 @@ def inference(test_data, tokenizer, model, output_path, verbose=True, batch_size
         model=model,
         tokenizer=tokenizer,
         torch_dtype=torch.bfloat16,
-        device_map="auto",
+        device_map=args.device,
         batch_size=batch_size  # Enable batch processing for faster inference
     )
 
@@ -102,20 +103,12 @@ def inference(test_data, tokenizer, model, output_path, verbose=True, batch_size
     print(f"Total valid samples: {total_samples}")
     
     with open(output_path, "w", encoding="utf-8") as f_out:
-        # Process batches with progress bar
-        for batch_start in tqdm(range(0, total_samples, batch_size), desc="Inference Progress", unit="batch"):
-            batch_end = min(batch_start + batch_size, total_samples)
-            batch_prompts = prompts[batch_start:batch_end]
-            batch_indices = valid_indices[batch_start:batch_end]
-            batch_user_msgs = user_messages[batch_start:batch_end]
-            
-            if verbose and batch_size == 1:
-                print(f"Processing test case {batch_indices[0]}...")
-                print(f"User message: {batch_user_msgs[0]}")
-
-            try:
-                # Batch inference
-                outputs = pipe(
+        try:
+            progress = tqdm(total=total_samples, desc="Inference")
+            for start in range(0, total_samples, batch_size):
+                end = min(start + batch_size, total_samples)
+                batch_prompts = prompts[start:end]
+                batch_outputs = pipe(
                     batch_prompts,
                     max_new_tokens=args.max_new_tokens,
                     do_sample=True,
@@ -126,28 +119,28 @@ def inference(test_data, tokenizer, model, output_path, verbose=True, batch_size
                     return_full_text=False  # Only return generated text, not the prompt
                 )
 
-                # Process each output in the batch
-                for i, output in enumerate(outputs):
-                    idx = batch_indices[i]
-                    user_msg = batch_user_msgs[i]
-                    prompt = batch_prompts[i]
-                    
-                    # Extract generated text
+                for i, output in enumerate(batch_outputs):
+                    idx = valid_indices[start + i]
+                    user_msg = user_messages[start + i]
+                    prompt = prompts[start + i]
+
+                    if verbose and batch_size == 1:
+                        print(f"Processing test case {idx}...")
+                        print(f"User message: {user_msg}")
+
                     if isinstance(output, list):
                         generated_text = output[0]["generated_text"]
                     else:
                         generated_text = output["generated_text"]
-                    
-                    # Extract only the newly generated part (after the prompt)
+
                     if generated_text.startswith(prompt):
                         response = generated_text[len(prompt):].lstrip()
                     else:
                         response = generated_text
-                    
+
                     if verbose and batch_size == 1:
                         print(f"Response: \n {response}")
 
-                    # Build output in the exact same format as input
                     output_messages = []
                     output_messages.append({
                         "role": "user",
@@ -158,24 +151,25 @@ def inference(test_data, tokenizer, model, output_path, verbose=True, batch_size
                         "content": response.strip()
                     })
 
-                    # Write as a single JSON object per line (JSONL)
                     result = {"messages": output_messages}
                     f_out.write(json.dumps(result, ensure_ascii=False) + "\n")
-                
-                f_out.flush()
 
-            except Exception as e:
-                print(f"Error in batch starting at index {batch_start}: {e}")
-                # Write error for each sample in the batch
-                for i in range(len(batch_prompts)):
-                    idx = batch_indices[i]
-                    error_result = {
-                        "id": idx,
-                        "error": str(e),
-                        "input_prompt": batch_prompts[i]
-                    }
-                    f_out.write(json.dumps(error_result, ensure_ascii=False) + "\n")
-                f_out.flush()
+                progress.update(len(batch_outputs))
+
+            progress.close()
+            f_out.flush()
+
+        except Exception as e:
+            print(f"Error during inference: {e}")
+            for i, prompt in enumerate(prompts):
+                idx = valid_indices[i]
+                error_result = {
+                    "id": idx,
+                    "error": str(e),
+                    "input_prompt": prompt
+                }
+                f_out.write(json.dumps(error_result, ensure_ascii=False) + "\n")
+            f_out.flush()
 
     print(f"Inference completed! Results saved to {output_path}")
 
@@ -200,7 +194,7 @@ if __name__ == "__main__":
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         dtype=torch.bfloat16,
-        device_map="auto"
+        device_map=args.device
     )
     output_file_name = f"{args.model_path}/{args.test_data_path}"
     output_path = f"result/{output_file_name}"

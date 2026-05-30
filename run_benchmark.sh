@@ -1,19 +1,20 @@
 #!/bin/bash
 
 # Script to evaluate model performance on 7 tasks with 14 datasets
-# Usage: bash evaluate_all_tasks.sh <model_path> <encoding> <splits> <samples> [batch_size]
-# Example: bash evaluate_all_tasks.sh Qwen/Qwen3-14B-graphvocab-stage1-full GraphVocab 10 10 4
+# Usage: bash evaluate_all_tasks.sh <model_path> <encoding> <splits> <samples> [batch_size] [device]
+# Example: bash evaluate_all_tasks.sh Qwen/Qwen3-14B-graphvocab-stage1-full GraphVocab 10 10 4 cuda:0
 
 # Check if correct number of arguments provided
-if [ "$#" -lt 4 ] || [ "$#" -gt 5 ]; then
-    echo "Usage: $0 <model_path> <encoding> <splits> <samples> [batch_size]"
+if [ "$#" -lt 4 ] || [ "$#" -gt 6 ]; then
+    echo "Usage: $0 <model_path> <encoding> <splits> <samples> [batch_size] [device]"
     echo "  model_path: Path to the model to evaluate"
     echo "  encoding: EdgeList, GraphVocab, or Incident"
     echo "  splits: Number of splits for evaluation (e.g., 10)"
     echo "  samples: Number of samples in dataset (e.g., 10)"
     echo "  batch_size: (Optional) Batch size for inference, default is 1 (e.g., 4 for faster multi-GPU inference)"
+    echo "  device: (Optional) Device for inference, default is cuda:0 (e.g., cuda:1 or cpu)"
     echo ""
-    echo "Example: $0 Qwen/Qwen3-14B-graphvocab-stage1-full GraphVocab 3 100 4"
+    echo "Example: $0 Qwen/Qwen3-14B-graphvocab-stage1-full GraphVocab 3 100 4 cuda:0"
     exit 1
 fi
 
@@ -22,6 +23,7 @@ ENCODING=$2
 SPLITS=$3
 SAMPLES=$4
 BATCH_SIZE=${5:-1}  # Default to 1 if not provided
+DEVICE=${6:-cuda:0}  # Default to cuda:0 if not provided
 
 # Validate encoding parameter
 if [ "$ENCODING" != "EdgeList" ] && [ "$ENCODING" != "GraphVocab" ] && [ "$ENCODING" != "Incident" ]; then
@@ -55,6 +57,7 @@ echo "Encoding: $ENCODING"
 echo "Splits: $SPLITS"
 echo "Samples: $SAMPLES"
 echo "Batch Size: $BATCH_SIZE"
+echo "Device: $DEVICE"
 echo "=========================================="
 echo ""
 
@@ -72,7 +75,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Connectivity - Dataset 2 (Hard)..."
@@ -83,7 +87,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 
@@ -100,7 +105,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Degree - Dataset 2 (Hard)..."
@@ -111,7 +117,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 
@@ -128,7 +135,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Shortest Path - Dataset 2 (Hard)..."
@@ -139,7 +147,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 
@@ -156,7 +165,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Isomorphism - Dataset 2 (Hard)..."
@@ -167,7 +177,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 
@@ -184,7 +195,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Cycle Detection - Dataset 2 (Hard)..."
@@ -195,7 +207,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 
@@ -212,7 +225,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Max Clique - Dataset 2 (Hard)..."
@@ -223,7 +237,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 
@@ -240,7 +255,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "Running Max Common Subgraph - Dataset 2 (Hard)..."
@@ -251,7 +267,8 @@ python inference.py \
     --num_splits $SPLITS \
     --max_new_tokens 8192 \
     --temperature 0.5 \
-    --batch_size $BATCH_SIZE
+    --batch_size $BATCH_SIZE \
+    --device "$DEVICE"
 
 echo ""
 echo "=========================================="
@@ -262,6 +279,7 @@ echo "Encoding: $ENCODING"
 echo "Splits: $SPLITS"
 echo "Samples: $SAMPLES"
 echo "Batch Size: $BATCH_SIZE"
+echo "Device: $DEVICE"
 echo "Total tasks: 7"
 echo "Total datasets: 14"
 echo "=========================================="

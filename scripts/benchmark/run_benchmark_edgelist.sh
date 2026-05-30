@@ -8,5 +8,6 @@ ENCODING="EdgeList"
 SPLITS=3
 SAMPLES=100
 BATCH_SIZE=10
+DEVICE="cuda:0"
 
-bash run_benchmark.sh "$MODEL_PATH" "$ENCODING" "$SPLITS" "$SAMPLES" "$BATCH_SIZE"
+bash run_benchmark.sh "$MODEL_PATH" "$ENCODING" "$SPLITS" "$SAMPLES" "$BATCH_SIZE" "$DEVICE"
