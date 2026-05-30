@@ -23,7 +23,7 @@ timestamp_str = datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
 
 parser = argparse.ArgumentParser(description="LLM Inference for Graph Reasoning Tasks")
 parser.add_argument("--test_data_path", type=str, default="GraphVulcan-Data/stage2-3/shortest_path/GraphVocab_Stage2_ShortestPath_CoT_Nodes-11-30_Samples-100_Splits-3_Test.jsonl", help="Path to test data JSON file")
-parser.add_argument("--model_path", type=str, default="alibaba-behavioral-risk-control/GraphVulcan-SFT", help="Path to the pretrained model")
+parser.add_argument("--model_path", type=str, default="models/GraphVulcan-SFT", help="Path to the pretrained model")
 parser.add_argument("--max_new_tokens", type=int, default=8192, help="Maximum number of tokens to generate")
 parser.add_argument("--temperature", type=float, default=0.5, help="Sampling temperature")
 parser.add_argument("--task", type=str, default="s2_shortest_path", help="Select task")
@@ -223,11 +223,3 @@ if __name__ == "__main__":
         results = load_and_evaluate_s2_max_clique(output_path, tokenizer_obj=tokenizer, num_splits=args.num_splits, verbose=args.verbose)
     else:
         raise ValueError(f"Unknown task: {args.task}")
-    
-
-
-
-
-
-
-
