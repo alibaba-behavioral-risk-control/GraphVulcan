@@ -1,7 +1,7 @@
 # GraphVulcan: Discrete Graph Tokenization for Structural Reasoning in Large Language Models
 
 [![KDD 2026](https://img.shields.io/badge/KDD-2026-blue)](https://doi.org/10.1145/3770855.3818177)
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Towards Next Graph Token Prediction: Discrete Graph Tokenization for Structural Reasoning in Large Language Models**
 >
@@ -67,21 +67,25 @@ GraphVulcan/
 │   ├── gen_data_max_common_subgraph.py  # Stage 2: MCS task
 │   ├── gen_data_graph_classification.py # Graph classification data
 │   └── gen_data_single_task.sh   #   Helper: generate data for one task
-├── train_s1.py                   # Stage 1 training
-├── train_s2.py                   # Stage 2 training (joint SFT)
-├── train_s3.py                   # Stage 3 training (GRPO)
-├── inference.py                  # Model inference
 ├── evaluate/                     # Evaluation & reward functions
 ├── scripts/                      # Training & benchmark launch scripts
 │   ├── stage1_train/             #   Stage 1 training scripts
 │   ├── stage2_train/             #   Stage 2 training scripts
 │   ├── stage3_train/             #   Stage 3 training scripts
-│   └── benchmark_sh/            #   Benchmark evaluation scripts
+│   └── benchmark/                #   Benchmark evaluation scripts
+├── GraphVulcan-Data/             # Example datasets (stage1, stage2-3)
+├── models/                       # Model checkpoints (downloaded or trained)
+├── ds_config/                    # DeepSpeed configurations
+├── utils/                        # Utility functions
+├── image/                        # Figures used in the paper
 ├── gen_data_s1.sh                # Generate Stage 1 data
 ├── gen_data_s2_s3.sh             # Generate Stage 2 & 3 data
 ├── run_benchmark.sh              # Run evaluation on all 7 tasks
-├── ds_config/                    # DeepSpeed configurations
-└── utils/                        # Utility functions
+├── inference.py                  # Model inference
+├── train_s1.py                   # Stage 1 training
+├── train_s2.py                   # Stage 2 training (joint SFT)
+├── train_s3.py                   # Stage 3 training (GRPO)
+└── requirements.sh               # Python dependencies
 ```
 
 ## Download
@@ -126,8 +130,8 @@ model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype="bfloat16",
 ### Installation
 
 ```bash
-pip install torch transformers trl datasets networkx
-pip install deepspeed bitsandbytes
+# Install dependencies via helper script
+bash requirements.sh
 ```
 
 ### Data Generation
@@ -150,17 +154,21 @@ bash gen_data/gen_data_single_task.sh shortest_path
 # Stage 1: Structural Semantic Pretraining
 python train_s1.py \
     --base_model_path Qwen/Qwen3-8B \
-    --dmc_dataset_path data/stage1/GraphVocab_Stage1_DMC_Relabels-15_MaxNodes-5_Train.jsonl \
+    --dmc_dataset_path GraphVulcan-Data/stage1/GraphVocab_Stage1_DMC_Relabels-15_MaxNodes-5_Train.jsonl \
     --extend_graph_vocab 1
 
-# Stage 2: Multi-task SFT
+# Stage 2: Multi-task SFT (expects datasets under ./data/ by default)
+# If your data is in GraphVulcan-Data/, create a symlink: ln -s GraphVulcan-Data data
+# (or adjust the paths in train_s2.py)
+
 deepspeed --num_gpus 4 train_s2.py \
-    --model_path model/GraphVulcan-Stage1 \
+    --model_path GraphVulcan-Stage1 \
     --encoding GraphVocab \
     --cot \
     --deepspeed ds_config/ds_config_zero2_4xH20_Qwen3-8B.json
 
 # Stage 3: GRPO Reinforcement Learning
+
 deepspeed --num_gpus 8 train_s3.py \
     --model_path model/GraphVulcan-SFT \
     --deepspeed ds_config/ds_config_zero3_8xH20_Qwen3-8B.json
@@ -177,17 +185,22 @@ bash scripts/stage3_train/run_train_s3_grpo_local.sh
 
 ```bash
 # Evaluate on all 7 tasks
-bash run_benchmark.sh <model_path> GraphVocab <num_splits> <num_samples> [batch_size]
+bash run_benchmark.sh <model_path> GraphVocab <num_splits> <num_samples> [batch_size] [device]
 
-# Single-task inference
-python inference.py --model_path <model_path> --encoding GraphVocab --task connectivity
+# Single-task inference (provide a full test JSONL path)
+python inference.py \
+    --test_data_path GraphVulcan-Data/stage2-3/shortest_path/GraphVocab_Stage2_ShortestPath_CoT_Nodes-11-30_Samples-100_Splits-3_Test.jsonl \
+    --model_path models/GraphVulcan-SFT \
+    --task s2_shortest_path \
+    --batch_size 10 \
+    --device cuda:0
 ```
 
 Pre-configured benchmark scripts:
 ```bash
-bash scripts/benchmark_sh/run_benchmark_graphvocab.sh
-bash scripts/benchmark_sh/run_benchmark_edgelist.sh
-bash scripts/benchmark_sh/run_benchmark_incident.sh
+bash scripts/benchmark/run_benchmark_graphvulcan.sh
+bash scripts/benchmark/run_benchmark_edgelist.sh
+bash scripts/benchmark/run_benchmark_incident.sh
 ```
 
 ## Quick Example: Graph Tokenization
