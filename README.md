@@ -91,11 +91,8 @@ GraphVulcan/
 The training and evaluation data is hosted on Hugging Face:
 
 ```bash
-# Install Git LFS (required for large files)
-git lfs install
-
-# Clone the dataset repository
-git clone https://huggingface.co/datasets/alibaba-behavioral-risk-control/GraphVulcan-Data
+# Download with the Hugging Face CLI
+hf download alibaba-behavioral-risk-control/GraphVulcan-Data --repo-type dataset --local-dir ./GraphVulcan-Data
 
 # Or load directly in Python
 from datasets import load_dataset
@@ -112,10 +109,9 @@ We release two model checkpoints:
 | **GraphVulcan-GRPO** | After Stage 3 GRPO reinforcement learning | [🤗 HuggingFace](https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-GRPO) |
 
 ```bash
-# Download via Git
-git lfs install
-git clone https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-SFT
-git clone https://huggingface.co/alibaba-behavioral-risk-control/GraphVulcan-GRPO
+# Download with the Hugging Face CLI
+hf download alibaba-behavioral-risk-control/GraphVulcan-SFT --local-dir ./models/GraphVulcan-SFT
+hf download alibaba-behavioral-risk-control/GraphVulcan-GRPO --local-dir ./models/GraphVulcan-GRPO
 
 # Or load directly in Python
 from transformers import AutoModelForCausalLM, AutoTokenizer
