@@ -1,6 +1,6 @@
 pip install trl
 pip install bitsandbytes
-pip install transformers==4.57.6
+pip install transformers
 pip install datasets
 pip install deepspeed
 pip install torch
